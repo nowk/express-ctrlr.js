@@ -147,6 +147,7 @@ cruds
  * @param {String} verb (eg. GET, POST, PUT, etc...)
  * @param {String} path
  * @return {Function}
+ * @api private
  */
 
 function _action(action, verb, path) {
