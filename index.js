@@ -155,7 +155,7 @@ function _action(action, verb, path) {
   }
 
   verb = verb.toLowerCase();
-  if (methods.indexOf(verb) === -1) {
+  if (!validVerb(verb)) {
     throw new Error('`'+verb+'` is not a valid VERB');
   }
 
@@ -235,3 +235,14 @@ function sortActions(actions) {
     });
 }
 
+/*
+ * valid verb
+ *
+ * @param {String} verb
+ * @return {Boolean}
+ * @api private
+ */
+
+function validVerb(verb) {
+  return methods.indexOf(verb) !== -1;
+}
