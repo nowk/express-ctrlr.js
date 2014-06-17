@@ -4,7 +4,7 @@ var express = require('express');
 var methods = require('methods');
 
 // add `all`
-methods.push('all');
+methods = methods.concat(['all']);
 
 /*
  * expose
