@@ -102,9 +102,9 @@ Will map in this order
 
 The mapping order is always
 
-    1 before(s)
-    2 action(s)
-    3 <built in crud methods> [index, new, create, show, edit, update, patch, destroy]
+    1 before(s)               (then in the order they were defined)
+    2 action(s)               (then in the order they were defined)
+    3 <built in crud methods> (this order: index, new, create, show, edit, update, patch, destroy)
 
 Built in crud method order
 
@@ -124,8 +124,8 @@ The built in crud methods will always maintain their defined map order regardles
 
 Will still map as
 
-    .new()
-    .show()
+    // GET /posts/new
+    // GET /posts/:id
 
 ## License
 
