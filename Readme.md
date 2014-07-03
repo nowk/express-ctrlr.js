@@ -142,7 +142,7 @@ Alternate path definition.
     // GET  /posts/:id
     // POST /posts
 
-This method allows for a simple namespacing design.
+This method allows for a simple namespacing pattern.
 
     app.use("/api", postsCtrlr.router("/posts"));
     app.use("/api", tasksCtrlr.router("/tasks"));
@@ -161,7 +161,7 @@ Nested routes.
 
     // GET /posts/:post_id/comments/:id
 
-**Require the path to be passed as the `router` argument in order to get all the URL params.**
+*Requires the path to be passed as the `router` argument in order to get all the URL params.*
 
 
 ## License
