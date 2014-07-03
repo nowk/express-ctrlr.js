@@ -2,6 +2,7 @@
 
 var express = require('express');
 var methods = require('methods');
+var Path = require("path");
 
 // add `all`
 methods = methods.concat(['all']);
@@ -77,21 +78,25 @@ var crudActions = cruds.map(function(obj) {
 /*
  * return the router applied
  *
+ * @param {String} path
  * @return {Router}
  * @api public
  */
 
-Controller.prototype.router = function() {
+Controller.prototype.router = function(path) {
+  path = path || '';
   var actions = sortActions(this._actions);
   var self = this;
   var i = 0;
   var len = actions.length;
   for(; i<len; i++) {
     var action = actions[i];
+    var args = [action.cb];
     if ('all' === action.verb) {
-      self._router.use(action.cb);
+      self._router.use.apply(self._router, args);
     } else {
-      self._router[action.verb](action.path, action.cb);
+      args.unshift(Path.join(path, action.path));
+      self._router[action.verb].apply(self._router, args);
     }
   }
   return this._router;

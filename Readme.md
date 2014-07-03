@@ -127,6 +127,43 @@ Will still map as
     // GET /posts/new
     // GET /posts/:id
 
+---
+
+Alternate path definition.
+
+    var ctrlr = controller()
+      .new(...)
+      .show(...)
+      .create(...);
+
+    app.use(ctrlr.router("/posts"));
+
+    // GET  /posts/new
+    // GET  /posts/:id
+    // POST /posts
+
+This method allows for a simple namespacing design.
+
+    app.use("/api", postsCtrlr.router("/posts"));
+    app.use("/api", tasksCtrlr.router("/tasks"));
+
+    // /api/posts/...
+    // /api/tasks/...
+
+---
+
+Nested routes.
+
+    var ctrlr = controller()
+      .show(...);
+
+    app.use(ctrlr.router("/posts/:post_id/comments"));
+
+    // GET /posts/:post_id/comments/:id
+
+**Require the path to be passed as the `router` argument in order to get all the URL params.**
+
+
 ## License
 
 MIT

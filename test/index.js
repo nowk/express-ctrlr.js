@@ -251,6 +251,54 @@ describe('controller', function() {
         });
     });
   });
+
+  it("can define the path to router", function(done) {
+    var ctrlr = controller()
+      .show(cb('PARAMS'));
+    app.use(ctrlr.router("/posts"));
+
+    request(app)
+      .get("/posts/12345")
+      .end(function(err, res) {
+        assert.deepEqual(res.body, {id: "12345"});
+        done();
+      });
+  });
+
+  describe("nested routes", function() {
+    it("must define the path to the router function", function(done) {
+      var ctrlr = controller()
+        .show(cb('PARAMS'));
+      app.use("/api", ctrlr.router("/posts/:post_id/comments"));
+      app.use("/api", ctrlr.router("/tasks/:task_id/comments"));
+
+      request(app)
+        .get("/api/posts/12345/comments/09876")
+        .end(function(err, res) {
+          assert.deepEqual(res.body, {post_id: "12345", id: "09876"});
+
+          request(app)
+            .get("/api/tasks/abcde/comments/54321")
+            .end(function(err, res) {
+              assert.deepEqual(res.body, {task_id: "abcde", id: "54321"});
+              done();
+            });
+        });
+    });
+
+    it("does not capture nested params in the use path", function(done) {
+      var ctrlr = controller()
+        .show(cb('PARAMS'));
+      app.use("/posts/:post_id/comments", ctrlr.router());
+
+      request(app)
+        .get("/posts/12345/comments/09876")
+        .end(function(err, res) {
+          assert.deepEqual(res.body, {id: "09876"});
+          done();
+        });
+    });
+  });
 });
 
 /*
