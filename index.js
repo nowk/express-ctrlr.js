@@ -92,12 +92,16 @@ Controller.prototype.router = function(path) {
   for(; i<len; i++) {
     var action = actions[i];
     var args = [action.cb];
+    var verb = action.verb;
     if ('all' === action.verb) {
-      self._router.use.apply(self._router, args);
+      verb = 'use';
+      if (path) {
+        args.unshift(path);
+      }
     } else {
       args.unshift(Path.join(path, action.path));
-      self._router[action.verb].apply(self._router, args);
     }
+    self._router[verb].apply(self._router, args);
   }
   return this._router;
 };

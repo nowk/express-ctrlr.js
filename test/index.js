@@ -179,6 +179,9 @@ describe('controller', function() {
         .action("/new", cb('locals'))
         .update(cb('locals'));
       app.use("/posts", ctrlr.router());
+      app.use("/", function(req, res, next) {
+        res.send(res.locals);
+      });
 
       request(app)
         .get("/posts/new")
@@ -188,7 +191,38 @@ describe('controller', function() {
 
           request(app)
             .put("/posts/123")
-            .expect(200, {foo: 'bar'}, done);
+            .end(function(err, res) {
+              assert.equal(res.status, 200);
+              assert.deepEqual(res.body, {foo: 'bar'});
+
+              request(app)
+                .put("/")
+                .expect(200, {}, done);
+            });
+        });
+    });
+
+    it("before all actions, with path as router arg", function(done) {
+      var ctrlr = controller()
+        .before(function(req, res, next) {
+          res.locals.foo = 'bar';
+          next();
+        })
+        .action("/new", cb('locals'));
+      app.use(ctrlr.router("/posts"));
+      app.use("/", function(req, res, next) {
+        res.send(res.locals);
+      });
+
+      request(app)
+        .get("/posts/new")
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.deepEqual(res.body, {foo: 'bar'});
+
+          request(app)
+            .put("/")
+            .expect(200, {}, done);
         });
     });
   });
