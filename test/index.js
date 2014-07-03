@@ -332,6 +332,25 @@ describe('controller', function() {
           done();
         });
     });
+
+    it("[Fix] Some paths maintain the trailing / causing routes to 404", function(done) {
+      var ctrlr = controller()
+        .create(cb('PARAMS'));
+      app.use(ctrlr.router("/posts/:post_id/comments"));
+
+      request(app)
+        .post("/posts/12345/comments")
+        .end(function(err, res) {
+          assert.deepEqual(res.body, {post_id: "12345"});
+
+          request(app)
+            .post("/posts/12345/comments/")
+            .end(function(err, res) {
+              assert.deepEqual(res.body, {post_id: "12345"});
+              done();
+            });
+        });
+    });
   });
 });
 

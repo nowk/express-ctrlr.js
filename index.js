@@ -99,7 +99,7 @@ Controller.prototype.router = function(path) {
         args.unshift(path);
       }
     } else {
-      args.unshift(Path.join(path, action.path));
+      args.unshift(Path.join(path, action.path).replace(/\/$/, ''));
     }
     self._router[verb].apply(self._router, args);
   }
